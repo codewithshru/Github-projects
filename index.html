@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Management </title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- ============ TOP HEADER ============ -->
+    <header class="top-header">
+        <button id="menuToggle" class="menu-toggle">&#9776;</button>
+        <h1>Student Management System</h1>
+    </header>
+
+    <div class="layout">
+
+        <!-- ============ SIDEBAR NAVIGATION ============ -->
+        <aside class="sidebar" id="sidebar">
+            <nav>
+                <ul>
+                    <li><button class="nav-btn active" data-section="dashboard">📊 Dashboard</button></li>
+                    <li><button class="nav-btn" data-section="students">🎓 Students</button></li>
+                    <li><button class="nav-btn" data-section="attendance">📅 Attendance</button></li>
+                    <li><button class="nav-btn" data-section="marks">📝 Marks</button></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- ============ MAIN CONTENT ============ -->
+        <main class="content">
+
+            <!-- ---------- DASHBOARD SECTION ---------- -->
+            <section id="dashboard" class="page active">
+                <h2>Dashboard Overview</h2>
+                <div class="cards">
+                    <div class="card">
+                        <h3 id="totalStudents">0</h3>
+                        <p>Total Students</p>
+                    </div>
+                    <div class="card">
+                        <h3 id="totalCourses">0</h3>
+                        <p>Total Courses</p>
+                    </div>
+                    <div class="card">
+                        <h3 id="totalDepartments">0</h3>
+                        <p>Total Departments</p>
+                    </div>
+                    <div class="card">
+                        <h3 id="avgAttendance">0%</h3>
+                        <p>Average Attendance</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ---------- STUDENT MANAGEMENT SECTION ---------- -->
+            <section id="students" class="page">
+                <h2>Student Management</h2>
+
+                <!-- Add / Edit Student Form -->
+                <form id="studentForm" class="form-card">
+                    <input type="hidden" id="editIndex">
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="studentId">Student ID</label>
+                            <input type="text" id="studentId" placeholder="e.g. S101">
+                            <span class="error" id="err-studentId"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="studentName">Name</label>
+                            <input type="text" id="studentName" placeholder="Full Name">
+                            <span class="error" id="err-studentName"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="studentEmail">Email</label>
+                            <input type="text" id="studentEmail" placeholder="example@mail.com">
+                            <span class="error" id="err-studentEmail"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="studentPhone">Phone</label>
+                            <input type="text" id="studentPhone" placeholder="10 digit number">
+                            <span class="error" id="err-studentPhone"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="studentDept">Department</label>
+                            <select id="studentDept">
+                                <option value="">-- Select Department --</option>
+                                <option value="CSE">CSE</option>
+                                <option value="ECE">ECE</option>
+                                <option value="MECH">MECH</option>
+                                <option value="CIVIL">CIVIL</option>
+                                <option value="IT">IT</option>
+                            </select>
+                            <span class="error" id="err-studentDept"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="studentCourse">Course</label>
+                            <select id="studentCourse">
+                                <option value="">-- Select Course --</option>
+                                <option value="B.Tech">B.Tech</option>
+                                <option value="M.Tech">M.Tech</option>
+                                <option value="BCA">BCA</option>
+                                <option value="MCA">MCA</option>
+                            </select>
+                            <span class="error" id="err-studentCourse"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="studentSemester">Semester</label>
+                            <select id="studentSemester">
+                                <option value="">-- Select Semester --</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="7">7</option>
+                                <option value="8">8</option>
+                            </select>
+                            <span class="error" id="err-studentSemester"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" id="submitBtn" class="btn btn-primary">Add Student</button>
+                        <button type="button" id="cancelEditBtn" class="btn btn-secondary"
+                            style="display:none;">Cancel</button>
+                    </div>
+                </form>
+
+                <!-- Search Bar -->
+                <div class="search-bar">
+                    <input type="text" id="searchInput" placeholder="Search by Name, Student ID or Department...">
+                </div>
+
+                <!-- Students Table -->
+                <div class="table-wrapper">
+                    <table id="studentsTable">
+                        <thead>
+                            <tr>
+                                <th>Student ID</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>Department</th>
+                                <th>Course</th>
+                                <th>Semester</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="studentsTableBody">
+                            <!-- Rows inserted by JavaScript -->
+                        </tbody>
+                    </table>
+                    <p id="noStudentsMsg" class="empty-msg" style="display:none;">No students found.</p>
+                </div>
+            </section>
+
+            <!-- ---------- ATTENDANCE SECTION ---------- -->
+            <section id="attendance" class="page">
+                <h2>Attendance</h2>
+
+                <form id="attendanceForm" class="form-card">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="attendanceStudent">Select Student</label>
+                            <select id="attendanceStudent">
+                                <option value="">-- Select Student --</option>
+                            </select>
+                            <span class="error" id="err-attendanceStudent"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="totalClasses">Total Classes</label>
+                            <input type="number" id="totalClasses" min="0" placeholder="e.g. 50">
+                            <span class="error" id="err-totalClasses"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="attendedClasses">Classes Attended</label>
+                            <input type="number" id="attendedClasses" min="0" placeholder="e.g. 45">
+                            <span class="error" id="err-attendedClasses"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">Calculate Attendance</button>
+                    </div>
+                </form>
+
+                <div id="attendanceResult" class="result-box" style="display:none;">
+                    <h3>Attendance Result</h3>
+                    <p id="attendanceResultText"></p>
+                </div>
+
+                <!-- Attendance Records Table -->
+                <div class="table-wrapper">
+                    <table id="attendanceTable">
+                        <thead>
+                            <tr>
+                                <th>Student ID</th>
+                                <th>Name</th>
+                                <th>Total Classes</th>
+                                <th>Attended</th>
+                                <th>Percentage</th>
+                            </tr>
+                        </thead>
+                        <tbody id="attendanceTableBody"></tbody>
+                    </table>
+                    <p id="noAttendanceMsg" class="empty-msg" style="display:none;">No attendance records yet.</p>
+                </div>
+            </section>
+
+            <!-- ---------- MARKS SECTION ---------- -->
+            <section id="marks" class="page">
+                <h2>Marks</h2>
+
+                <form id="marksForm" class="form-card">
+                    <div class="form-group">
+                        <label for="marksStudent">Select Student</label>
+                        <select id="marksStudent">
+                            <option value="">-- Select Student --</option>
+                        </select>
+                        <span class="error" id="err-marksStudent"></span>
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="marksMath">Mathematics</label>
+                            <input type="number" id="marksMath" min="0" max="100" placeholder="0-100">
+                            <span class="error" id="err-marksMath"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="marksDBMS">DBMS</label>
+                            <input type="number" id="marksDBMS" min="0" max="100" placeholder="0-100">
+                            <span class="error" id="err-marksDBMS"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="marksOS">Operating Systems</label>
+                            <input type="number" id="marksOS" min="0" max="100" placeholder="0-100">
+                            <span class="error" id="err-marksOS"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="marksCN">Computer Networks</label>
+                            <input type="number" id="marksCN" min="0" max="100" placeholder="0-100">
+                            <span class="error" id="err-marksCN"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">Calculate Result</button>
+                    </div>
+                </form>
+
+                <div id="marksResult" class="result-box" style="display:none;">
+                    <h3>Result</h3>
+                    <p id="marksResultText"></p>
+                </div>
+
+                <!-- Marks Records Table -->
+                <div class="table-wrapper">
+                    <table id="marksTable">
+                        <thead>
+                            <tr>
+                                <th>Student ID</th>
+                                <th>Name</th>
+                                <th>Maths</th>
+                                <th>DBMS</th>
+                                <th>OS</th>
+                                <th>CN</th>
+                                <th>Total</th>
+                                <th>Percentage</th>
+                                <th>Grade</th>
+                            </tr>
+                        </thead>
+                        <tbody id="marksTableBody"></tbody>
+                    </table>
+                    <p id="noMarksMsg" class="empty-msg" style="display:none;">No marks records yet.</p>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
